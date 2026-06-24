@@ -5,17 +5,39 @@ services:
     image: postgres:16-alpine
     container_name: insurance-db-dev
     restart: unless-stopped
-
     environment:
       POSTGRES_DB: insurance_db
       POSTGRES_USER: admin123
       POSTGRES_PASSWORD: admin123
-
     ports:
       - "5432:5432"
-
     volumes:
       - pgdata_insurance:/var/lib/postgresql/data
+
+  # Le Backend Spring Boot (Java 21)
+  backend:
+    build: ./souscription
+    container_name: souscription-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/insurance_db
+      - SPRING_DATASOURCE_USERNAME=admin123
+      - SPRING_DATASOURCE_PASSWORD=admin123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - db
+
+  # Le Frontend React (Vite + Node 20)
+  frontend:
+    build: ./souscription-front
+    container_name: souscription-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
 
 volumes:
   pgdata_insurance:
