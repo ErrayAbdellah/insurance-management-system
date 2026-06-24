@@ -12,18 +12,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 @Table(name = "quotes")
-public class Devis {
+public class Quote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "produit_id", nullable = false)
-    private Produit produit;
 
     @Column(nullable = false)
     private BigDecimal montant;
@@ -35,4 +27,11 @@ public class Devis {
     @Column(name = "date_creation", nullable = false)
     private LocalDateTime dateCreation = LocalDateTime.now();
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "produit_id", nullable = false)
+    private Produit produit;
 }
